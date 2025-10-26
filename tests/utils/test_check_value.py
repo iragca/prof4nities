@@ -29,7 +29,6 @@ except ImportError:
         (10, (5, 10), True),
         ("2", ["1", "2", "3"], True),
         ("b", ("a", "c"), True),
-
     ],
 )
 def test_check_value_valid(value, valid_values, expected):
