@@ -1,5 +1,5 @@
 import pytest
-from src.utils.ensure_file import ensure_file
+from prof4nities.utils.ensure_file import ensure_file
 
 
 def test_ensure_file_creates_file(tmp_path, capsys):

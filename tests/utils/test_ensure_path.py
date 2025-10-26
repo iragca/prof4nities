@@ -1,4 +1,4 @@
-from src.utils import ensure_path
+from prof4nities.utils import ensure_path
 from pathlib import Path
 
 

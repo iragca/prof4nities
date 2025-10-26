@@ -1,4 +1,4 @@
-from src.utils import check_env_variable
+from prof4nities.utils import check_env_variable
 from pytest import raises
 
 

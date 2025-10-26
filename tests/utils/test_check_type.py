@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils import check_type
+from prof4nities.utils import check_type
 
 
 @pytest.mark.parametrize(

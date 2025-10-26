@@ -1,6 +1,6 @@
 import pytest
 import warnings
-from src.utils import warnings as warnings_module
+from prof4nities.utils import warnings as warnings_module
 
 
 def test_deprecated_decorator_warns(monkeypatch):

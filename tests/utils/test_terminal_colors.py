@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils import terminal_colors
+from prof4nities.utils import terminal_colors
 
 
 @pytest.mark.parametrize(

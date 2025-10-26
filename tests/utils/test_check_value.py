@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils.check_value import check_value
+from prof4nities.utils.check_value import check_value
 
 try:
     import numpy as np

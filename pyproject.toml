@@ -3,12 +3,16 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "src"
+name = "prof4nities"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = ["dotenv>=0.9.9", "loguru>=0.7.3", "typer>=0.19.2"]
+dependencies = [
+    "dotenv>=0.9.9",
+    "loguru>=0.7.3",
+    "typer>=0.19.2",
+]
 
 [dependency-groups]
 dev = [
@@ -18,7 +22,7 @@ dev = [
     "pytest>=8.4.2",
     "pytest-mock>=3.15.1",
     "ruff>=0.14.0",
-    "src",
+    "prof4nities",
 ]
 
 [tool.uv.sources]
