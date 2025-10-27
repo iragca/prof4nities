@@ -3,11 +3,12 @@ from typing import Union
 import httpx
 
 from prof4nities.enums import Language
-
+from prof4nities.utils import check_types
 
 class Wordlist:
     SOURCE_URL = "https://raw.githubusercontent.com/censor-text/profanity-list/refs/heads/main/list/"
 
+    @check_types
     def __init__(self, language: Union[Language, str] = Language.ENGLISH) -> None:
         self.language = language.value if isinstance(language, Language) else language
         self.wordlist = self.fetch_wordlist()
