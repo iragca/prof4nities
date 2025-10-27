@@ -1,5 +1,7 @@
 from typing import TypedDict
 
+from ..utils import check_types
+
 
 class WordDict(TypedDict):
     text: str
@@ -76,6 +78,7 @@ class Word:
     {"text": "secret", "obfuscate": True}
     """
 
+    @check_types
     def __init__(self, word: str, obfuscate: bool = False) -> None:
         if len(word) == 0:
             raise ValueError("Word cannot be an empty string.")
