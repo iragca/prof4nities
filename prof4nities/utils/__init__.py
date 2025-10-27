@@ -5,6 +5,7 @@ from .cli_script_logger import cli_script_logger
 from .ensure_file import ensure_file
 from .ensure_path import ensure_path
 from .greetings import greetings
+from .pipeline import Pipeline, Step
 from .warnings import deprecated
 
 __all__ = [
@@ -17,4 +18,6 @@ __all__ = [
     "check_types",
     "check_value",
     "deprecated",
+    "Pipeline",
+    "Step",
 ]
