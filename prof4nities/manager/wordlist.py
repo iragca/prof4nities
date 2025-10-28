@@ -1,17 +1,27 @@
-from typing import Union
+from typing import Optional, Union
 
 import httpx
 
 from prof4nities.enums import Language
 from prof4nities.utils import check_types
 
+from .cache import CacheManager
+
+
 class Wordlist:
     SOURCE_URL = "https://raw.githubusercontent.com/censor-text/profanity-list/refs/heads/main/list/"
 
     @check_types
-    def __init__(self, language: Union[Language, str] = Language.ENGLISH) -> None:
+    def __init__(
+        self,
+        language: Union[Language, str] = Language.ENGLISH,
+        cache_kwargs: Optional[dict] = None,
+    ) -> None:
         self.language = language.value if isinstance(language, Language) else language
-        self.wordlist = self.fetch_wordlist()
+        self._cache = CacheManager(
+            filename=f"{self.language}_profanities_wordlist", **(cache_kwargs or {})
+        )
+        self._wordlist = self.fetch_wordlist()
 
     @property
     def wordlist_url(self) -> str:
@@ -41,12 +51,18 @@ class Wordlist:
             - The exact normalization/filtering applied to the wordlist is defined by
               self.process_wordlist.
         """
+        if self._cache.exists:
+            cached_words = self._cache.load()
+            if isinstance(cached_words, list):
+                return cached_words
+
         response = httpx.get(self.wordlist_url)
         if response.status_code != 200:
             raise ValueError(f"Failed to fetch wordlist for language {self.language}")
         words = response.text.splitlines()
-
-        return self.process_wordlist(words)
+        words = self.process_wordlist(words)
+        self._cache.save(words)
+        return words
 
     @staticmethod
     def process_wordlist(words: list[str]) -> list[str]:
@@ -74,19 +90,17 @@ class Wordlist:
         return sorted(set(word.strip().lower() for word in words if word.strip()))
 
     def __len__(self) -> int:
-        return len(self.wordlist)
+        return len(self._wordlist)
 
     def __iter__(self):
-        for word in self.wordlist:
+        for word in self._wordlist:
             yield word
 
-    def __getitem__(self, index: int) -> str:
-        return self.wordlist[index]
-
     def __contains__(self, word: str) -> bool:
-        return word.lower() in self.wordlist
+        return word in self._wordlist
 
     def __repr__(self) -> str:
-        return f"Wordlist(language='{self.language}')"
+        return f"Wordlist(language='{self.language}', size={len(self)})"
 
-    __str__ = __repr__
+    def __str__(self) -> str:
+        return str(self._wordlist)
