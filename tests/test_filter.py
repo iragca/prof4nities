@@ -42,3 +42,12 @@ def test_call_with_list(filter_instance: Filter):
     words = ["vag", "nigga", "hi"]
     result = filter_instance(words, separator=" ")
     assert result == "*** ***** hi"
+
+
+def test_filter_word_with_variants(filter_instance: Filter):
+
+    text = "nigg4"
+
+    result = filter_instance(text)
+
+    assert result == "*" * len(text)
