@@ -1,4 +1,5 @@
-from typing import TypedDict
+from collections.abc import Sequence
+from typing import Hashable, TypedDict
 
 from ..utils import check_types
 
@@ -8,7 +9,7 @@ class WordDict(TypedDict):
     obfuscate: bool
 
 
-class Word:
+class Word(Sequence[Hashable]):
     """Word
     ----
     Lightweight value object representing a single word (string) with an optional
