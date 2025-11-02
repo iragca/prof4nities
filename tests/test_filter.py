@@ -63,3 +63,24 @@ def test_unstringify(filter_instance: Censor):
         "Expected all elements to be Word objects"
     )
     assert result[-1].obfuscate_flag, f"Expected '{badword}' to be obfuscated"
+
+def test_stringify_with_list(filter_instance: Censor):
+    words = ["nigga", "hello", "vag"]
+    censored_words = filter_instance(words, stringify=False)
+
+    assert isinstance(censored_words, list), f"Expected list, got {type(censored_words)}"
+    assert all(isinstance(word, Word) for word in censored_words), (
+        "Expected all elements to be Word objects"
+    )
+    assert censored_words[0].obfuscate_flag, f"Expected '{words[0]}' to be obfuscated"
+    assert not censored_words[1].obfuscate_flag, f"Expected '{words[1]}' to be clean"
+    assert censored_words[2].obfuscate_flag, f"Expected '{words[2]}' to be obfuscated"
+
+
+def test_no_stringify_with_string(filter_instance: Censor):
+    text = "nigga hello vag"
+    result = filter_instance(text, stringify=False)
+    assert isinstance(result, list)
+    assert all(isinstance(word, Word) for word in result), (
+        "Expected all elements to be Word objects"
+    )
