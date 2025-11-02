@@ -12,12 +12,53 @@ from .utils import Pipeline, check_types
 
 
 class Censor:
+    """
+    Detects and flags profane or inappropriate words in text.
+
+    The `Censor` class provides utilities to identify, evaluate, and optionally
+    censor words or lists of words using multiple similarity checks including
+    Levenshtein distance and fuzzy string ratios. It can process individual
+    words, tokenized lists, or full text strings.
+
+    Parameters
+    ----------
+    language : str or Language, optional
+        The language code or `Language` enum used to select the appropriate
+        profanity wordlist. Defaults to "en" (English).
+
+    Attributes
+    ----------
+    language : str
+        The language code used for censorship.
+    wordlist : Wordlist
+        The loaded profanity or sensitive-word list for the given language.
+    """
+
     def __init__(self, language: Union[str, Language] = "en") -> None:
         self.language = language.value if isinstance(language, Language) else language
         self.wordlist = Wordlist(language=self.language)
         nltk.download("wordnet")
 
     def censor_list(self, words: list[str]) -> list[Word]:
+        """
+        Evaluate a list of words for profanity or inappropriate content.
+
+        Parameters
+        ----------
+        words : list of str
+            A list of words to be evaluated.
+
+        Returns
+        -------
+        list of Word
+            A list of `Word` objects where each entry contains the original word
+            and a boolean flag indicating whether it is profane.
+
+        Raises
+        ------
+        TypeError
+            If `words` is not a list of strings.
+        """
         if not isinstance(words, list):
             raise TypeError("Input must be a list of strings.")
 
@@ -25,6 +66,28 @@ class Censor:
 
     @check_types
     def censor_word(self, word: str) -> Word:
+        """
+        Evaluate a single word for profanity or inappropriate content.
+
+        Uses multiple strategies to determine if a word is profane:
+        direct lookup in the profanity wordlist, WordNet validation,
+        Levenshtein distance, and fuzzy ratio similarity metrics.
+
+        Parameters
+        ----------
+        word : str
+            The input word to check.
+
+        Returns
+        -------
+        Word
+            A `Word` object indicating whether the word is profane.
+
+        Raises
+        ------
+        TypeError
+            If `word` is not a string.
+        """
         if not isinstance(word, str):
             raise TypeError("Input must be a string.")
 
@@ -58,6 +121,35 @@ class Censor:
         separator: Optional[str] = " ",
         stringify: bool = True,
     ) -> str | list[Word]:
+        """
+        Process text or a list of words for censorship.
+
+        This method serves as a callable interface for the class,
+        allowing instances of `Censor` to be used like functions.
+
+        Parameters
+        ----------
+        text : str or list of str
+            The input text or list of words to evaluate.
+        separator : str or None, optional
+            The word separator used for tokenization. Defaults to a space (" ").
+            If `text` is a list, this parameter must be provided.
+            If `text` is a single word, this can be `None`.
+        stringify : bool, optional
+            Whether to return a single censored string (`True`) or a list of
+            `Word` objects (`False`). Defaults to `True`.
+
+        Returns
+        -------
+        str or list of Word
+            If `stringify` is True, returns a censored string representation of
+            the input text. Otherwise, returns a list of `Word` objects.
+
+        Raises
+        ------
+        ValueError
+            If invalid input parameter combinations are provided.
+        """
         if isinstance(text, list):
             words = self.censor_list(text)
             return self.stringify(tuple(words), separator or " ")
@@ -73,12 +165,30 @@ class Censor:
             return self.censor_list(tokens)
 
         raise ValueError(
-            "Invalid input parameters. If 'text' is a list, 'separator' must be provided. If 'text' is a string, 'separator' can be None."
+            "Invalid input parameters. "
+            "If 'text' is a list, 'separator' "
+            "must be provided. If 'text' is a string, "
+            "'separator' can be None."
         )
 
     @staticmethod
     @lru_cache(maxsize=None)
     def stringify(words: Union[tuple[Word], Word], separator: str = " ") -> str:
+        """
+        Convert a list or tuple of `Word` objects into a single string.
+
+        Parameters
+        ----------
+        words : tuple of Word or Word
+            A single `Word` instance or tuple of `Word` instances to stringify.
+        separator : str, optional
+            The string used to join multiple words. Defaults to a space (" ").
+
+        Returns
+        -------
+        str
+            A string representation of the censored or clean text.
+        """
         if isinstance(words, tuple):
             return separator.join(str(word) for word in words)
         return str(words)
@@ -86,6 +196,21 @@ class Censor:
     @staticmethod
     @lru_cache(maxsize=None)
     def tokenizer(text: str, separator: str = " ") -> list[str]:
+        """
+        Tokenize text into a list of words using a simple pipeline.
+
+        Parameters
+        ----------
+        text : str
+            The input text to be tokenized.
+        separator : str, optional
+            The delimiter used to split text into tokens. Defaults to a space (" ").
+
+        Returns
+        -------
+        list of str
+            A list of tokens extracted from the input text.
+        """
         pipeline = Pipeline(
             [
                 str.strip,

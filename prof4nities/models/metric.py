@@ -20,6 +20,9 @@ class StringMetric(ABC):
 
     @abstractmethod
     def compute(self) -> Union[int, float]:
+        """
+        Compute the string metric between the two input strings.
+        """
         pass
 
     @property
@@ -203,7 +206,7 @@ class LevenshteinDistance(StringMetric):
         of the two string lengths:
 
         .. math::
-            \\text{normalized\_distance} = \\frac{distance}{\\max(len(str1), len(str2))}
+            \\text{normalized_distance} = \\frac{distance}{\\max(len(str1), len(str2))}
         """
         max_len = max(len_str1, len_str2)
         if max_len == 0:
