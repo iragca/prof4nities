@@ -34,7 +34,7 @@ class StringMetric(ABC):
 
 class LevenshteinDistance(StringMetric):
     def __init__(
-        self, str1: Union[str, Word], str2: Union[str, Word], threshold: int = 2
+        self, str1: Union[str, Word], str2: Union[str, Word], threshold: float = 0.80
     ) -> None:
         super().__init__(str1, str2, threshold)
 
@@ -71,17 +71,35 @@ class LevenshteinDistance(StringMetric):
 
     @property
     def passes_threshold(self) -> bool:
-        return self.compute() <= self._threshold
+        return (
+            self.similarity_score(
+                distance=self.compute(),
+                len_str1=len(self.str1),
+                len_str2=len(self.str2),
+            )
+            >= self._threshold
+        )
+
+    @staticmethod
+    def normalize_distance(distance: int, len_str1: int, len_str2: int) -> float:
+        max_len = max(len_str1, len_str2)
+        if max_len == 0:
+            return 0.0
+        return distance / max_len
+
+    def similarity_score(self, distance: int, len_str1: int, len_str2: int) -> float:
+        normalized_distance = self.normalize_distance(distance, len_str1, len_str2)
+        return 1.0 - normalized_distance
 
 
 class FuzzyRatio(StringMetric):
     def __init__(
-        self, str1: Union[str, Word], str2: Union[str, Word], threshold: float = 80.0
+        self, str1: Union[str, Word], str2: Union[str, Word], threshold: float = 0.80
     ) -> None:
         super().__init__(str1, str2, threshold)
 
     def compute(self) -> float:
-        return fuzz.ratio(self.str1, self.str2)
+        return fuzz.ratio(self.str1, self.str2) / 100.0
 
     @property
     def passes_threshold(self) -> bool:
