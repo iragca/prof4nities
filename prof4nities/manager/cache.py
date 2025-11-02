@@ -218,7 +218,7 @@ class CacheManager(Cache):
     ----------
     cache_dir : Path
         Full path to the directory used to store cache files
-        (i.e., ``directory / ".cache"``). This directory is created on
+        (i.e., ``directory``). This directory is created on
         initialization if it does not already exist.
     filename : str
         The provided cache filename base.
@@ -258,7 +258,7 @@ class CacheManager(Cache):
         ext: Literal["json", "txt"] = "txt",
         directory: Path = Path(Directories.CACHE_DIR.value),
     ) -> None:
-        self.cache_dir = directory / ".cache"
+        self.cache_dir = directory
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.filename = filename
         self.ext = ext
