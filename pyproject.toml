@@ -10,7 +10,6 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "httpx>=0.28.1",
-    "loguru>=0.7.3",
     "nltk>=3.9.2",
     "numpy>=2.3.4",
     "rapidfuzz>=3.14.1",

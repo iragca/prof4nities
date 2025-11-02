@@ -1,7 +1,6 @@
 import os
 from enum import Enum
 
-from loguru import logger
 
 
 class Environment(Enum):
