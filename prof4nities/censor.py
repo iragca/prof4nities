@@ -37,7 +37,7 @@ class Censor:
     def __init__(self, language: Union[str, Language] = "en") -> None:
         self.language = language.value if isinstance(language, Language) else language
         self.wordlist = Wordlist(language=self.language)
-        nltk.download("wordnet", download_dir=Directories.CACHE_DIR.value)
+        nltk.download("wordnet")
 
     def censor_list(self, words: list[str]) -> list[Word]:
         """
