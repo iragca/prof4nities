@@ -43,16 +43,20 @@ def test_call_with_list(censor_instance: Censor):
     result = censor_instance(words, separator=" ")
     assert result == "*** **** hi"
 
+
 @pytest.mark.parametrize(
     "text",
-    [
-        ("fvck"),
-        ("fuc k"),
-        ("f*u*c*k")
-    ],
+    [("fvck"), ("fuc k"), ("f*u*c*k")],
 )
 def test_filter_word_edge_cases(text, censor_instance: Censor):
-    assert censor_instance(text) == "*" * len(text)
+    result = censor_instance(text, stringify=False)
+
+    assert isinstance(result, list), f"Expected list, got {type(result)}"
+    assert all(isinstance(word, Word) for word in result), (
+        "Expected all elements to be Word objects"
+    )
+    assert len(result) == 1
+    assert result[0].obfuscate_flag, f"Expected '{text}' to be obfuscated"
 
 
 def test_unstringify(censor_instance: Censor):
@@ -67,11 +71,14 @@ def test_unstringify(censor_instance: Censor):
     )
     assert result[-1].obfuscate_flag, f"Expected '{badword}' to be obfuscated"
 
+
 def test_stringify_with_list(censor_instance: Censor):
     words = ["fuck", "hello", "vag"]
     censored_words = censor_instance(words, stringify=False)
 
-    assert isinstance(censored_words, list), f"Expected list, got {type(censored_words)}"
+    assert isinstance(censored_words, list), (
+        f"Expected list, got {type(censored_words)}"
+    )
     assert all(isinstance(word, Word) for word in censored_words), (
         "Expected all elements to be Word objects"
     )
