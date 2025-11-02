@@ -1,5 +1,5 @@
 from .enums import Language
-from .filter import Filter
+from .filter import Censor
 from .manager import Wordlist
 
-__all__ = ["Wordlist", "Filter", "Language"]
+__all__ = ["Wordlist", "Censor", "Language"]
