@@ -4,7 +4,7 @@ from typing import Optional, Union
 import nltk
 from nltk.corpus import wordnet
 
-from .config import Directories, Environment
+from .config import Environment
 from .enums import Language
 from .manager import Wordlist
 from .models import FuzzyRatio, LevenshteinDistance, Word
