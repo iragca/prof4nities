@@ -4,7 +4,7 @@ from typing import Optional, Union
 import nltk
 from nltk.corpus import wordnet
 
-from .config import Environment
+from .config import Directories, Environment
 from .enums import Language
 from .manager import Wordlist
 from .models import FuzzyRatio, LevenshteinDistance, Word
@@ -37,7 +37,7 @@ class Censor:
     def __init__(self, language: Union[str, Language] = "en") -> None:
         self.language = language.value if isinstance(language, Language) else language
         self.wordlist = Wordlist(language=self.language)
-        nltk.download("wordnet")
+        nltk.download("wordnet", download_dir=Directories.CACHE_DIR.value)
 
     def censor_list(self, words: list[str]) -> list[Word]:
         """
