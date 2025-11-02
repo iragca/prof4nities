@@ -40,7 +40,7 @@ def test_metric_with_word_objects():
     assert isinstance(ratio, float)
     assert word_obj1.passes_threshold is True
 
-    word_obj2 = LevenshteinDistance(word1, word2, threshold=1)
+    word_obj2 = LevenshteinDistance(word1, word2, threshold=0.20)
     distance = word_obj2.compute()
     assert isinstance(distance, int)
     assert word_obj2.passes_threshold is True
