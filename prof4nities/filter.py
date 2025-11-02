@@ -51,8 +51,11 @@ class Filter:
         return Word(word, False)
 
     def __call__(
-        self, text: Union[list[str], str], separator: Optional[str] = " "
-    ) -> str:
+        self,
+        text: Union[list[str], str],
+        separator: Optional[str] = " ",
+        stringify: bool = True,
+    ) -> str | list[Word]:
         if isinstance(text, list):
             words = self.filter_list(text)
             return self.stringify(tuple(words), separator or " ")
@@ -61,7 +64,11 @@ class Filter:
             if separator is None:
                 return str(self.filter_word(text))
             tokens = self.tokenizer(text, separator=separator)
-            return self.stringify(tuple(self.filter_list(tokens)), separator)
+
+            if stringify:
+                return self.stringify(tuple(self.filter_list(tokens)), separator)
+
+            return self.filter_list(tokens)
 
         raise ValueError(
             "Invalid input parameters. If 'text' is a list, 'separator' must be provided. If 'text' is a string, 'separator' can be None."

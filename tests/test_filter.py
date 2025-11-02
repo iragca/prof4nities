@@ -45,9 +45,21 @@ def test_call_with_list(filter_instance: Filter):
 
 
 def test_filter_word_with_variants(filter_instance: Filter):
-
     text = "nigg4"
 
     result = filter_instance(text)
 
     assert result == "*" * len(text)
+
+
+def test_unstringify(filter_instance: Filter):
+    badword = "nigg4"
+    text = "hello word " + badword
+
+    result = filter_instance(text, stringify=False)
+
+    assert isinstance(result, list), f"Expected list object, got {type(result)}"
+    assert all(isinstance(word, Word) for word in result), (
+        "Expected all elements to be Word objects"
+    )
+    assert result[-1].obfuscate_flag, f"Expected '{badword}' to be obfuscated"
