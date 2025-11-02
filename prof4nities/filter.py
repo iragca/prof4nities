@@ -1,6 +1,7 @@
 from functools import lru_cache
 from typing import Optional, Union
 
+import nltk
 from nltk.corpus import wordnet
 
 from .config import Environment
@@ -14,6 +15,7 @@ class Filter:
     def __init__(self, language: Union[str, Language] = "en") -> None:
         self.language = language.value if isinstance(language, Language) else language
         self.wordlist = Wordlist(language=self.language)
+        nltk.download("wordnet")
 
     def filter_list(self, words: list[str]) -> list[Word]:
         if not isinstance(words, list):
