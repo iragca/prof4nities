@@ -156,11 +156,11 @@ class Censor:
                 self.stringify(tuple(words), separator or " ") if stringify else words
             )
 
-        if isinstance(text, str) and separator is None:
-            word = self.censor_word(text)
-            return str(word) if stringify else [word]
-
         if isinstance(text, str):
+            if separator is None:
+                word = self.censor_word(text)
+                return str(word) if stringify else [word]
+
             tokens = self.tokenizer(text, separator=separator or " ")
             words = self.censor_list(tokens)
             return (
@@ -168,10 +168,7 @@ class Censor:
             )
 
         raise ValueError(
-            "Invalid input parameters. "
-            "If 'text' is a list, 'separator' "
-            "must be provided. If 'text' is a string, "
-            "'separator' can be None."
+            "Invalid input: 'text' must be either a string or a list of strings."
         )
 
     @staticmethod
