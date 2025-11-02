@@ -1,9 +1,11 @@
 from functools import lru_cache
 from typing import Optional, Union
 
+from nltk.corpus import wordnet
+
 from .enums import Language
 from .manager import Wordlist
-from .models import Word
+from .models import FuzzyRatio, LevenshteinDistance, Word
 from .utils import Pipeline, check_types
 
 
@@ -23,8 +25,29 @@ class Filter:
         if not isinstance(word, str):
             raise TypeError("Input must be a string.")
 
-        is_profane = word.lower() in self.wordlist
-        return Word(word, is_profane)
+        if word.lower() in self.wordlist:
+            return Word(word, True)
+
+        if wordnet.synsets(word):
+            return Word(word, False)
+
+        for profane_word in self.wordlist:
+            distance = LevenshteinDistance(
+                str1=word.lower(),
+                str2=profane_word,
+                threshold=0.8,
+            )
+
+            fuzzy_ratio = FuzzyRatio(
+                str1=word.lower(),
+                str2=profane_word,
+                threshold=0.8,
+            )
+
+            if distance.passes_threshold or fuzzy_ratio.passes_threshold:
+                return Word(word, True)
+
+        return Word(word, False)
 
     def __call__(
         self, text: Union[list[str], str], separator: Optional[str] = " "
