@@ -4,6 +4,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Any, Literal, Union
 
+from ..config import Directories
 from ..utils import check_types
 
 
@@ -211,7 +212,7 @@ class CacheManager(Cache):
         Default is `'txt'`.
     directory : Path, optional
         Parent directory in which a hidden `.cache` folder will be created.
-        Default is ``Path.home() / ".prof4nities"``.
+        Default is ``Directories.CACHE_DIR.value``.
 
     Attributes
     ----------
@@ -255,7 +256,7 @@ class CacheManager(Cache):
         self,
         filename: str,
         ext: Literal["json", "txt"] = "txt",
-        directory: Path = Path.home() / ".prof4nities",
+        directory: Path = Path(Directories.CACHE_DIR.value),
     ) -> None:
         self.cache_dir = directory / ".cache"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
