@@ -2,7 +2,6 @@ import os
 from enum import Enum
 
 
-
 class Environment(Enum):
     """Settings class to hold environment variables."""
 
