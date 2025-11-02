@@ -1,5 +1,6 @@
 import os
 from enum import Enum
+from pathlib import Path
 
 from platformdirs import user_cache_dir
 
@@ -7,7 +8,7 @@ from platformdirs import user_cache_dir
 class Directories(Enum):
     """Settings class to hold directory paths."""
 
-    CACHE_DIR = user_cache_dir(appname="prof4nities", appauthor="iragca")
+    CACHE_DIR = Path(user_cache_dir(appname="prof4nities", appauthor="iragca"))
 
 
 class Environment(Enum):

@@ -256,7 +256,7 @@ class CacheManager(Cache):
         self,
         filename: str,
         ext: Literal["json", "txt"] = "txt",
-        directory: Path = Path(Directories.CACHE_DIR.value),
+        directory: Path = Directories.CACHE_DIR.value,
     ) -> None:
         self.cache_dir = directory
         self.cache_dir.mkdir(parents=True, exist_ok=True)
