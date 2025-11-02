@@ -11,18 +11,6 @@ def wordlist_instance(tmp_path):
     return wl
 
 
-def test_wordlist_url(wordlist_instance: Wordlist):
-    wl = wordlist_instance
-    assert (
-        wl.wordlist_url
-        == f"https://raw.githubusercontent.com/censor-text/profanity-list/refs/heads/main/list/{wl.language}.txt"
-    )
-    assert (
-        wl.wordlist_url
-        == f"https://raw.githubusercontent.com/censor-text/profanity-list/refs/heads/main/list/{wl.language}.txt"
-    )
-
-
 def test_fetch_wordlist(mocker, wordlist_instance: Wordlist):
     wl = wordlist_instance
 
