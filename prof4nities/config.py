@@ -28,7 +28,8 @@ class Environment(Enum):
     """Settings class to hold environment variables."""
 
     # Example:
-    DATABASE_URL = os.getenv("DATABASE_URL")
+    LEVENSHTEIN_THRESHOLD = float(os.getenv("LEVENSHTEIN_THRESHOLD", "0.8"))
+    FUZZY_RATIO_THRESHOLD = float(os.getenv("FUZZY_RATIO_THRESHOLD", "0.8"))
 
 
 required_env_vars = []

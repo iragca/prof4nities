@@ -3,6 +3,7 @@ from typing import Optional, Union
 
 from nltk.corpus import wordnet
 
+from .config import Environment
 from .enums import Language
 from .manager import Wordlist
 from .models import FuzzyRatio, LevenshteinDistance, Word
@@ -35,13 +36,13 @@ class Filter:
             distance = LevenshteinDistance(
                 str1=word.lower(),
                 str2=profane_word,
-                threshold=0.8,
+                threshold=Environment.LEVENSHTEIN_THRESHOLD.value,
             )
 
             fuzzy_ratio = FuzzyRatio(
                 str1=word.lower(),
                 str2=profane_word,
-                threshold=0.8,
+                threshold=Environment.FUZZY_RATIO_THRESHOLD.value,
             )
 
             if distance.passes_threshold or fuzzy_ratio.passes_threshold:
