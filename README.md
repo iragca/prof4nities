@@ -37,8 +37,6 @@ The `Censor` class loads a language-specific `Wordlist` (default `en`) and expos
 ```bash
 export LEVENSHTEIN_THRESHOLD=0.75
 export FUZZY_RATIO_THRESHOLD=0.85
-# then run your script or REPL
-python -c "from prof4nities import Censor; print(Censor('en')('badword'))"
 ```
 
 Defaults are:
