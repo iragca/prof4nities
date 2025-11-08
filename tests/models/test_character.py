@@ -1,5 +1,3 @@
-import pytest
-
 from prof4nities.models import Character, Characters
 
 
