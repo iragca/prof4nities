@@ -8,7 +8,7 @@ from nltk.corpus import wordnet
 from .config import Environment
 from .enums import Language
 from .manager import Wordlist
-from .models import FuzzyRatio, LevenshteinDistance, Word
+from .models import FuzzyRatio, Character, Characters, LevenshteinDistance, Word
 from .utils import Pipeline, check_types
 
 
@@ -40,7 +40,7 @@ class Censor:
         self.wordlist = Wordlist(language=self.language)
         nltk.download("wordnet")
 
-    def censor_list(self, words: list[str]) -> list[Word]:
+    def censor_list(self, words: list[str], separator: str = " ") -> list[Word]:
         """
         Evaluate a list of words for profanity or inappropriate content.
 
@@ -160,8 +160,7 @@ class Censor:
 
         if isinstance(text, str):
             if separator is None:
-                word = self.censor_word(text)
-                return str(word) if stringify else [word]
+                return self.censor_text_by_characters(text)
 
             tokens = self.tokenizer(text, separator=separator or " ")
             words = self.censor_list(tokens)
@@ -258,3 +257,26 @@ class Censor:
             if re.search(pattern, text, re.IGNORECASE):
                 return True
         return False
+
+    def censor_text_by_characters(self, text: str) -> str:
+        """
+        Detect and censor profane words even when split by spaces or symbols.
+        """
+        letters = [Character(letter=c, index=i) for i, c in enumerate(text)]
+        no_spaces = Characters(letter for letter in letters if not letter.is_space)
+
+        # Convert text into a list so we can mutate characters
+        censored_chars = list(text)
+
+        for profane_word in self.wordlist:
+            found_letters = no_spaces.find_substring(profane_word)
+            if not found_letters:
+                continue
+
+            start_index = found_letters[0].index
+            end_index = found_letters[-1].index
+
+            for i in range(start_index, end_index + 1):
+                censored_chars[i] = "*"
+
+        return "".join(censored_chars)
