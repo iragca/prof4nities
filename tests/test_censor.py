@@ -111,20 +111,21 @@ def test_check_profanity_in_text(censor_instance: Censor):
     result = censor_instance.check_profanity_in_text(text)
     assert result
 
+
 def test_censor_text_by_letters(censor_instance):
     text = "fuc k hello"
 
     # Prepare the mock return value for find_substring
     # We simulate that the profane word "fuck" was found spanning indices 0-4
     fake_found_letters = [
-        Character(letter='f', index=0),
-        Character(letter='u', index=1),
-        Character(letter='c', index=2),
-        Character(letter='k', index=4)
+        Character(letter="f", index=0),
+        Character(letter="u", index=1),
+        Character(letter="c", index=2),
+        Character(letter="k", index=4),
     ]
 
     # Patch Characters.find_substring to return our fake result
-    with patch.object(Characters, 'find_substring', return_value=fake_found_letters):
+    with patch.object(Characters, "find_substring", return_value=fake_found_letters):
         result = censor_instance.censor_text_by_characters(text)
 
     assert result == "***** hello"
