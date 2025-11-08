@@ -1,3 +1,4 @@
+import re
 from functools import lru_cache
 from typing import Optional, Union
 
@@ -98,14 +99,15 @@ class Censor:
             return Word(word, False)
 
         for profane_word in self.wordlist:
+            compared_word = self.remove_punctuation(word.lower())
             distance = LevenshteinDistance(
-                str1=word.lower(),
+                str1=compared_word,
                 str2=profane_word,
                 threshold=Environment.LEVENSHTEIN_THRESHOLD.value,
             )
 
             fuzzy_ratio = FuzzyRatio(
-                str1=word.lower(),
+                str1=compared_word,
                 str2=profane_word,
                 threshold=Environment.FUZZY_RATIO_THRESHOLD.value,
             )
@@ -218,3 +220,41 @@ class Censor:
             ]
         )
         return pipeline(text)
+
+    def remove_punctuation(self, text: str) -> str:
+        """
+        Remove punctuation from the input text.
+
+        Parameters
+        ----------
+        text : str
+            The input text from which to remove punctuation.
+
+        Returns
+        -------
+        str
+            The text with punctuation removed.
+        """
+        return re.sub(r"[^\w\s]", "", text)
+
+    def check_profanity_in_text(self, text: str) -> bool:
+        """
+        Check if any profane words from the wordlist are present in the text.
+
+        Parameters
+        ----------
+        text : str
+            The input text to check for profane words.
+        wordlist : Wordlist
+            The profanity wordlist to check against.
+
+        Returns
+        -------
+        bool
+            True if any profane words are found, False otherwise.
+        """
+        for profane_word in self.wordlist:
+            pattern = r"\b" + re.escape(profane_word) + r"\b"
+            if re.search(pattern, text, re.IGNORECASE):
+                return True
+        return False

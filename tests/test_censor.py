@@ -94,3 +94,17 @@ def test_no_stringify_with_string(censor_instance: Censor):
     assert all(isinstance(word, Word) for word in result), (
         "Expected all elements to be Word objects"
     )
+
+
+def test_remove_punctuation(censor_instance: Censor):
+    text = "fuck, hello! vag?"
+    result = censor_instance.remove_punctuation(text)
+
+    assert isinstance(result, str), f"Expected string, got {type(result)}"
+    assert result == "fuck hello vag"
+
+
+def test_check_profanity_in_text(censor_instance: Censor):
+    text = "fuck hello vag"
+    result = censor_instance.check_profanity_in_text(text)
+    assert result
