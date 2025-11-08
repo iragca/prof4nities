@@ -42,6 +42,17 @@ def test_character_list_find_substring():
     assert "".join(letter.letter for letter in found_letters) == "fuck"
 
 
+def test_character_list_fragmented_word():
+    text = "example fuc k text"
+    letters = [Character(letter=c, index=i) for i, c in enumerate(text)]
+    no_spaces = Characters([letter for letter in letters if not letter.is_space])
+
+    found_letters = no_spaces.find_substring("fuck")
+    assert found_letters is not None
+    assert len(found_letters) == 4
+    assert "".join(letter.letter for letter in found_letters) == "fuck"
+
+
 def test_character_list_equality():
     text = "example text"
     letters = Characters(text)

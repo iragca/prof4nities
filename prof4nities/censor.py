@@ -263,7 +263,7 @@ class Censor:
         Detect and censor profane words even when split by spaces or symbols.
         """
         letters = [Character(letter=c, index=i) for i, c in enumerate(text)]
-        no_spaces = Characters(letter for letter in letters if not letter.is_space)
+        no_spaces = Characters([letter for letter in letters if not letter.is_space])
 
         # Convert text into a list so we can mutate characters
         censored_chars = list(text)
