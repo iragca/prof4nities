@@ -33,6 +33,15 @@ def test_filter_list(censor_instance: Censor):
     assert results[1].obfuscate_flag is False
     assert results[2].obfuscate_flag is True
 
+@pytest.mark.parametrize(
+    'bad_word, censored', [
+        ('biiiitccch', '**********'),
+        ('puuuutaaaaa', '***********'),
+        ('mmmmerda', '********')
+    ]
+)
+def test_call_with_string_bad_cases(bad_word: str, censored: str, censor_instance: Censor):
+    assert censor_instance(bad_word, separator=" ") == censored
 
 def test_call_with_string(censor_instance: Censor):
     text = "vag fuck hi"

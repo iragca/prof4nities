@@ -99,7 +99,7 @@ class Censor:
             return Word(word, False)
 
         for profane_word in self.wordlist:
-            compared_word = self.remove_punctuation(word.lower())
+            compared_word = self.normalize_text(self.remove_punctuation(word.lower()))
             distance = LevenshteinDistance(
                 str1=compared_word,
                 str2=profane_word,
@@ -280,3 +280,10 @@ class Censor:
                 censored_chars[i] = "*"
 
         return "".join(censored_chars)
+
+    def normalize_text(self, text: str) -> str:
+        """
+        fuuuck -> fuck, looool -> lol
+        """
+        return re.sub(r'(.)\1+', r'\1', text, flags=re.IGNORECASE)
+
