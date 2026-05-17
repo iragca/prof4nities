@@ -99,7 +99,7 @@ class Censor:
             return Word(word, False)
 
         for profane_word in self.wordlist:
-            compared_word = self.remove_punctuation(word.lower())
+            compared_word = self.normalize_text(self.remove_punctuation(word.lower()))
             distance = LevenshteinDistance(
                 str1=compared_word,
                 str2=profane_word,
@@ -261,6 +261,21 @@ class Censor:
     def censor_text_by_characters(self, text: str) -> str:
         """
         Detect and censor profane words even when split by spaces or symbols.
+
+        This method identifies profane words in the input text by analyzing
+        individual characters and their positions, allowing it to censor words
+        that may be obfuscated with spaces or punctuation.
+
+        Parameters
+        ----------
+        text : str
+            The input text to be censored.
+        
+        Returns
+        -------
+        str
+            The censored version of the input text, with profane words replaced by asterisks.
+            
         """
         letters = [Character(letter=c, index=i) for i, c in enumerate(text)]
         no_spaces = Characters([letter for letter in letters if not letter.is_space])
@@ -280,3 +295,20 @@ class Censor:
                 censored_chars[i] = "*"
 
         return "".join(censored_chars)
+
+    def normalize_text(self, text: str) -> str:
+        """
+        Normalize text by collapsing repeated characters.
+
+        Parameters
+        ----------
+        text : str
+            The input text to normalize.
+
+        Returns
+        -------
+        str            
+            The normalized text with repeated characters collapsed.
+        """
+        return re.sub(r'(.)\1+', r'\1', text, flags=re.IGNORECASE)
+
