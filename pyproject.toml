@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "prof4nities"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Python library for filtering profane words using string matching techniques."
 readme = "README.md"
 requires-python = ">=3.14"
