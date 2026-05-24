@@ -57,7 +57,7 @@ def test_call_with_list(censor_instance: Censor):
 
 @pytest.mark.parametrize(
     "text",
-    [("fvck"), ("fuc k"), ("f*u*c*k")],
+    [("fvck"), ("fuc k"), ("f*u*c*k"), ("fㅤuㅤcㅤk"), ("f😄u😄c😄k")],
 )
 def test_filter_word_edge_cases(text, censor_instance: Censor):
     result = censor_instance(text, stringify=False)
